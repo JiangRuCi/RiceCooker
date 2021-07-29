@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="cooking_state">
+    <img src="https://img.biggo.com.tw/190x,s1Z9_ZconvkJpA6tJqsRkspqcmnLbgAn7swCzNbTi6xY/https://img.ruten.com.tw/s2/4/38/14/22017485011988_376.jpg">
+    <div>
+        <h3>状态:未接电</h3>
+        <p class="tips"></p>
+    </div>
+</div>
+<div class="controls">
+    <button id="power_on">Power On</button>
+    <button id="power_off">Power Off</button>
+    <button id="cooking">Start Cooking</button>
+    <button id="open">Open</button>
+    <button id="close">Close</button>
+    <script>
+        let powerOn = document.querySelector("#power_on")
+        let powerOff = document.querySelector("#power_off")
+        let cooking = document.querySelector("#cooking")
+        let open = document.querySelector("#open")
+        let close = document.querySelector("#close")
+
+        let state = {
+            get currentState() {
+                return this._state;
+            },
+            set currentState(val) {
+                document.querySelector("h3").innerText = `当前状态:${val}`;
+                this.error = "";
+                this._state = val;
+            },
+            set error(val) {
+                document.querySelector(".tips").innerText = val;
+            }
+        }
+        state.currentState = "未接电"
+        powerOn.addEventListener("click", () => {
+            if (state.currentState === "未接电") {
+                state.currentState = "已接电";
+            }
+        })
+
+        powerOff.addEventListener("click", () => {
+            if (state.currentState === "未接电") {
+                state.error = "你还没接电呢,你是不是傻?";
+                return;
+            }
+            if (state.currentState === "已接电"
+                || state.currentState === "煮饭中"
+                || state.currentState === "已打开"
+                || state.currentState === "已关闭") {
+                state.currentState = "未接电";
+            }
+        })
+        cooking.addEventListener("click", () => {
+            if (state.currentState === "未接电") {
+                state.error = "你还没接电呢,你是不是傻?";
+                return;
+            }
+            if (state.currentState === "已接电"
+                || state.currentState === "已关闭") {
+                state.currentState = "煮饭中";
+            }
+            if (state.currentState === "已打开") {
+                state.error = "你是不是傻,改自都没关呢.";
+            }
+        })
+        open.addEventListener("click", () => {
+            if (state.currentState === "煮饭中") {
+                state.error = "你是不是想作死?我科会爆你一屋..";
+                return;
+            }
+            if (state.currentState === "已接电"
+                || state.currentState === "未接电"
+                || state.currentState === "已关闭") {
+                state.currentState = "已打开";
+            }
+        })
+
+        close.addEventListener("click", () => {
+            if (state.currentState === "已打开")
+                state.currentState = "已关闭";
+        })
+
+    </script>
+</div>
+</body>
+</html>
